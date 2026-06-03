@@ -1,34 +1,34 @@
 import { EventListenerManager } from '@/core/eventListenerManager';
 import { defaultOptions } from '@/core/defaultOptions';
 import { isBrowser, isTheme } from '@/utils';
-import type { DarkifyPlugin, Options, Theme } from '@/types';
+import type { Plugin, Options, Theme } from '@/types';
 
-export class Darkify {
+export class Umbra {
   private static readonly storageKey: string = 'theme';
   public readonly options: Options = defaultOptions;
-  private plugins: DarkifyPlugin[] = [];
+  private plugins: Plugin[] = [];
   public theme: Theme = 'light';
   private _elm!: EventListenerManager;
   private _meta!: HTMLMetaElement;
   private _style!: HTMLStyleElement;
 
   /**
-   * Creates a new Darkify instance with default options
+   * Creates a new Umbra instance with default options
    * @param element - Button ID (recommended) or HTML element selector
    */
   constructor(element: string);
 
   /**
-   * Creates a new Darkify instance with custom options only
+   * Creates a new Umbra instance with custom options only
    * @param options - Options
    */
   constructor(options: Partial<Options>);
 
   /**
-   * Creates a new Darkify instance for managing dark/light theme
+   * Creates a new Umbra instance for managing dark/light theme
    * @param element - Button ID (recommended) or HTML element selector
    * @param options - Options
-   * @see {@link https://github.com/emrocode/darkify-js/wiki|Documentation}
+   * @see {@link https://github.com/emrocode/umbra/wiki|Documentation}
    */
   constructor(element: string, options: Partial<Options>);
 
@@ -106,7 +106,7 @@ export class Darkify {
     const storage = this.getStorage();
 
     if (storage) {
-      const stored = storage.getItem(Darkify.storageKey);
+      const stored = storage.getItem(Umbra.storageKey);
       if (isTheme(stored)) return stored;
     }
 
@@ -121,7 +121,7 @@ export class Darkify {
     const dataTheme = document.documentElement;
     const { useColorScheme } = this.options;
 
-    const css = `/**! Darkify / A simple dark mode toggle library **/\n:root:where([data-theme="${this.theme}"]),[data-theme="${this.theme}"]{color-scheme:${this.theme}}`;
+    const css = `/**! Umbra / A simple dark mode toggle library **/\n:root:where([data-theme="${this.theme}"]),[data-theme="${this.theme}"]{color-scheme:${this.theme}}`;
 
     dataTheme.dataset.theme = this.theme;
 
@@ -152,13 +152,13 @@ export class Darkify {
     const STO = storage ? window.localStorage : window.sessionStorage;
     const OTS = storage ? window.sessionStorage : window.localStorage;
 
-    OTS.removeItem(Darkify.storageKey);
-    STO.setItem(Darkify.storageKey, this.theme);
+    OTS.removeItem(Umbra.storageKey);
+    STO.setItem(Umbra.storageKey, this.theme);
   }
 
   private syncThemeBetweenTabs(): void {
     this._elm.addListener(window, 'storage', (e: StorageEvent) => {
-      if (e.key === Darkify.storageKey && isTheme(e.newValue)) {
+      if (e.key === Umbra.storageKey && isTheme(e.newValue)) {
         this.applyTheme(e.newValue);
       }
     });
@@ -186,7 +186,7 @@ export class Darkify {
   }
 
   /**
-   * Destroys the Darkify instance and cleans up all resources
+   * Destroys the Umbra instance and cleans up all resources
    *
    * Removes all event listeners (system theme changes, click handlers, storage events),
    * destroys all active plugins, removes injected DOM elements (<style> and <meta> tags),

@@ -1,2 +1,2 @@
-export type { DarkifyPlugin, Options } from '@/types';
-export { Darkify as default } from '@/core/darkify';
+export { Umbra as default } from '@/core/umbra';
+export type { Plugin, Options } from '@/types';

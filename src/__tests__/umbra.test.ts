@@ -1,6 +1,6 @@
-import { Darkify } from '@/core/darkify';
+import { Umbra } from '@/core/umbra';
 
-describe('Darkify', () => {
+describe('Umbra', () => {
   const setupMatchMedia = (isDark: boolean = false) => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -40,28 +40,28 @@ describe('Darkify', () => {
   describe('Initialization', () => {
     test('should initialize with dark theme when OS prefers dark', () => {
       createButton();
-      const darkify = new Darkify('#el', {});
-      expect(darkify.getCurrentTheme()).toBe('dark');
+      const umbra = new Umbra('#el', {});
+      expect(umbra.getCurrentTheme()).toBe('dark');
     });
 
     test('should respect autoMatchTheme "false" option', () => {
       setupMatchMedia(false);
       createButton();
-      const freshDarkify = new Darkify('#el', { autoMatchTheme: false });
-      expect(freshDarkify.getCurrentTheme()).toBe('light');
+      const freshUmbra = new Umbra('#el', { autoMatchTheme: false });
+      expect(freshUmbra.getCurrentTheme()).toBe('light');
     });
   });
 
   describe('Storage', () => {
     test('should save theme to localStorage by default', () => {
       createButton();
-      new Darkify('#el', {});
+      new Umbra('#el', {});
       expect(localStorage.setItem).toHaveBeenCalledWith('theme', 'dark');
     });
 
     test('should use sessionStorage when specified', () => {
       createButton('el2');
-      new Darkify('#el2', { useStorage: 'session' });
+      new Umbra('#el2', { useStorage: 'session' });
 
       expect(sessionStorage.setItem).toHaveBeenCalledWith('theme', 'dark');
       expect(localStorage.removeItem).toHaveBeenCalledWith('theme');
@@ -69,7 +69,7 @@ describe('Darkify', () => {
 
     test('should not save theme when useStorage is "none"', () => {
       createButton('el3');
-      new Darkify('#el3', { useStorage: 'none' });
+      new Umbra('#el3', { useStorage: 'none' });
 
       expect(localStorage.setItem).not.toHaveBeenCalled();
       expect(sessionStorage.setItem).not.toHaveBeenCalled();
@@ -79,17 +79,17 @@ describe('Darkify', () => {
   describe('Theme toggle', () => {
     test('should toggle theme from dark to light', () => {
       createButton();
-      const darkify = new Darkify('#el', {});
-      darkify.toggleTheme();
-      expect(darkify.getCurrentTheme()).toBe('light');
+      const umbra = new Umbra('#el', {});
+      umbra.toggleTheme();
+      expect(umbra.getCurrentTheme()).toBe('light');
     });
 
     test('should toggle theme from light to dark', () => {
       setupMatchMedia(false);
       createButton();
-      const freshDarkify = new Darkify('#el', {});
-      freshDarkify.toggleTheme();
-      expect(freshDarkify.getCurrentTheme()).toBe('dark');
+      const freshUmbra = new Umbra('#el', {});
+      freshUmbra.toggleTheme();
+      expect(freshUmbra.getCurrentTheme()).toBe('dark');
     });
   });
 });

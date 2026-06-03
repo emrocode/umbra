@@ -1,5 +1,5 @@
-# Darkify JS
-[![Run tests](https://github.com/emrocode/darkify-js/actions/workflows/tests.yml/badge.svg)](https://github.com/emrocode/darkify-js/actions/workflows/tests.yml)
+# Umbra
+[![Run tests](https://github.com/emrocode/umbra/actions/workflows/tests.yml/badge.svg)](https://github.com/emrocode/umbra/actions/workflows/tests.yml)
 
 🌚 A simple dark mode toggle library that makes it easy to implement dark mode on your website without additional configuration
 
@@ -10,25 +10,25 @@
 Use npm or any other package manager:
 
 ```bash
-npm install darkify-js
+npm install @emrocode/umbra
 ```
 
 ### ⚙️ Setup
 
 ```js
 // main.js
-import Darkify from 'darkify-js';
+import Umbra from '@emrocode/umbra';
 
 const options = {
   autoMatchTheme: true,
 };
 
-// autoMatchTheme: default is true
-// useLocalStorage: default is true
-// useSessionStorage: default is false
-// useColorScheme: default is ['#ffffff', '#000000']
+// autoMatchTheme: boolean,
+// useColorScheme: default is ['#ffffff', '#000000'],
+// useStorage: 'local' | 'session' | 'none',
+// usePlugins: []
 
-new Darkify('#element', options);
+new Umbra('#element', options);
 ```
 
-[Wiki]: https://github.com/emrocode/darkify-js/wiki
+[Wiki]: https://github.com/emrocode/umbra/wiki

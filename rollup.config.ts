@@ -17,13 +17,13 @@ const config = [
     input: 'src/index.ts',
     output: [
       {
-        file: 'dist/darkify.esm.js',
+        file: 'dist/umbra.esm.js',
         format: 'esm',
         banner: BANNER,
       },
       {
-        file: 'dist/darkify.umd.js',
-        name: 'Darkify',
+        file: 'dist/umbra.umd.js',
+        name: 'Umbra',
         format: 'umd',
         banner: BANNER,
         plugins: [terser()],
@@ -34,12 +34,11 @@ const config = [
       typescript({ tsconfig: './tsconfig.json' }),
       cleanup({ comments: 'none', extensions: ['ts'] }),
     ],
-    preserveEntrySignatures: 'strict',
   },
   {
     input: 'src/index.ts',
     output: {
-      file: 'dist/darkify.d.ts',
+      file: 'dist/umbra.d.ts',
       format: 'esm',
     },
     plugins: [dts({ tsconfig: './tsconfig.json' })],
