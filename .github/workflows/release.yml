@@ -21,9 +21,9 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             New Release :tada:
-            - Unify storage options in `useStorage`
-            - Add plugins support via `usePlugins` option
-            - Add ThemeWidget and KeyboardShortcut plugins
-            - Add new public method `destroy()`
+            - Rename Darkify to Umbra
+            - Package: `@emrocode/umbra`
+            - Install with `npm install @emrocode/umbra`
+            - Breaking change: update imports and package name.
           draft: false
-          prerelease: true
+          prerelease: false
