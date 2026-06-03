@@ -1,13 +1,13 @@
 import { EventListenerManager } from '@/core/eventListenerManager';
 import { defaultOptions } from '@/core/defaultOptions';
-import { isBrowser } from '@/utils';
-import type { DarkifyPlugin, Options } from '@/types';
+import { isBrowser, isTheme } from '@/utils';
+import type { DarkifyPlugin, Options, Theme } from '@/types';
 
 export class Darkify {
   private static readonly storageKey: string = 'theme';
   public readonly options: Options = defaultOptions;
   private plugins: DarkifyPlugin[] = [];
-  public theme: string = 'light';
+  public theme: Theme = 'light';
   private _elm!: EventListenerManager;
   private _meta!: HTMLMetaElement;
   private _style!: HTMLStyleElement;
@@ -43,29 +43,25 @@ export class Darkify {
     const opts: Options = { ...defaultOptions, ...inputOpts };
 
     this.options = opts;
-    this.theme = this.getOsPreference();
+    this.theme = this.getInitialTheme();
     this._style = document.createElement('style');
     this._meta = document.createElement('meta');
 
+    this.init(el); // always on top
     this.createAttribute();
-    this.init(el);
     this.syncThemeBetweenTabs();
   }
 
   private init(element?: string): void {
-    this._elm.addListener(
-      window.matchMedia('(prefers-color-scheme: dark)'),
-      'change',
-      ({ matches: isDark }: MediaQueryListEvent) => {
-        this.theme = isDark ? 'dark' : 'light';
-        this.createAttribute();
-      }
-    );
+    const q = window.matchMedia('(prefers-color-scheme: dark)');
+    this._elm.addListener(q, 'change', ({ matches: isDark }: MediaQueryListEvent) => {
+      this.applyTheme(isDark ? 'dark' : 'light');
+    });
 
     const setup = () => {
       this.initPlugins();
-      const hasWidget = this.plugins.some(p => p.el !== undefined);
-      if (element && !hasWidget) {
+      const hasRenderedPlugin = this.plugins.some(plugin => plugin.el !== undefined);
+      if (element && !hasRenderedPlugin) {
         const htmlElement = document.querySelector<HTMLElement>(element);
         if (htmlElement) {
           this._elm.addListener(htmlElement, 'click', () => this.toggleTheme());
@@ -94,7 +90,7 @@ export class Darkify {
     });
   }
 
-  private notifyPlugins(theme: string) {
+  private notifyPlugins(theme: Theme) {
     this.plugins.forEach(plugin => {
       plugin.onThemeChange?.(theme);
     });
@@ -102,16 +98,16 @@ export class Darkify {
 
   private getStorage(): Storage | undefined {
     const { useStorage } = this.options;
-    if (useStorage === 'none') return;
+    if (useStorage === 'none') return undefined;
     return useStorage === 'local' ? window.localStorage : window.sessionStorage;
   }
 
-  private getOsPreference(): string {
+  private getInitialTheme(): Theme {
     const storage = this.getStorage();
 
     if (storage) {
       const stored = storage.getItem(Darkify.storageKey);
-      if (stored) return stored;
+      if (isTheme(stored)) return stored;
     }
 
     if (this.options.autoMatchTheme) {
@@ -130,7 +126,7 @@ export class Darkify {
     dataTheme.dataset.theme = this.theme;
 
     this.updateTags(css, useColorScheme);
-    this.savePreference();
+    this.persistTheme();
   }
 
   private updateTags(css: string, useColorScheme: Options['useColorScheme']) {
@@ -148,7 +144,7 @@ export class Darkify {
     if (!this._style.parentNode) head.appendChild(this._style);
   }
 
-  private savePreference(): void {
+  private persistTheme(): void {
     const { useStorage } = this.options;
     if (useStorage === 'none') return;
     const storage = useStorage === 'local';
@@ -162,15 +158,13 @@ export class Darkify {
 
   private syncThemeBetweenTabs(): void {
     this._elm.addListener(window, 'storage', (e: StorageEvent) => {
-      if (e.key === Darkify.storageKey && e.newValue) {
-        this.theme = e.newValue;
-        this.createAttribute();
-        this.notifyPlugins(e.newValue);
+      if (e.key === Darkify.storageKey && isTheme(e.newValue)) {
+        this.applyTheme(e.newValue);
       }
     });
   }
 
-  private setTheme(newTheme: 'light' | 'dark'): void {
+  private applyTheme(newTheme: Theme): void {
     this.theme = newTheme;
     this.createAttribute();
     this.notifyPlugins(newTheme);
@@ -180,14 +174,14 @@ export class Darkify {
    * Toggles the theme between light and dark modes
    */
   toggleTheme(): void {
-    this.setTheme(this.theme === 'light' ? 'dark' : 'light');
+    this.applyTheme(this.theme === 'light' ? 'dark' : 'light');
   }
 
   /**
    * Retrieves the currently active theme
    * @returns The current theme name ('light' or 'dark')
    */
-  getCurrentTheme(): string {
+  getCurrentTheme(): Theme {
     return this.theme;
   }
 

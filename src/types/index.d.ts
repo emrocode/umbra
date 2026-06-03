@@ -1,20 +1,26 @@
+export type Theme = 'light' | 'dark';
+
 export interface DarkifyPlugin<T extends HTMLElement = HTMLElement> {
   el?: T;
   render(): void | T;
-  onThemeChange?: (theme: string) => void;
+  onThemeChange?: (theme: Theme) => void;
   onDestroy?: () => void;
+}
+
+export interface DarkifyHost {
+  toggleTheme(): void;
+  getCurrentTheme(): Theme;
+  destroy(): void;
 }
 
 export interface DarkifyPluginConstructor {
   pluginId: string;
-  new (host: any, options?: any): DarkifyPlugin;
+  new (host: DarkifyHost, options?: any): DarkifyPlugin;
 }
-
-export type StorageType = 'local' | 'session' | 'none';
 
 export interface Options {
   autoMatchTheme: boolean;
   useColorScheme: [string, string?];
-  useStorage: StorageType;
+  useStorage: 'local' | 'session' | 'none';
   usePlugins?: (DarkifyPluginConstructor | [DarkifyPluginConstructor, any])[];
 }

@@ -1,14 +1,7 @@
 type ListenerTarget = Window | Document | HTMLElement | MediaQueryList;
 
-interface ListenerRecord {
-  target: ListenerTarget;
-  event: string;
-  handler: EventListenerOrEventListenerObject;
-  options?: boolean | AddEventListenerOptions;
-}
-
 export class EventListenerManager {
-  private listeners: ListenerRecord[] = [];
+  private controller = new AbortController();
 
   /**
    * Adds an event listener and tracks it for cleanup
@@ -17,31 +10,19 @@ export class EventListenerManager {
     target: ListenerTarget,
     event: string,
     handler: (event: T) => void,
-    options?: boolean | AddEventListenerOptions
-  ): void;
-  addListener(
-    target: ListenerTarget,
-    event: string,
-    handler: EventListenerOrEventListenerObject,
-    options?: boolean | AddEventListenerOptions
-  ): void;
-  addListener(
-    target: ListenerTarget,
-    event: string,
-    handler: EventListenerOrEventListenerObject,
-    options?: boolean | AddEventListenerOptions
+    options?: AddEventListenerOptions
   ): void {
-    target.addEventListener(event, handler, options);
-    this.listeners.push({ target, event, handler, options });
+    target.addEventListener(event, handler as EventListener, {
+      ...options,
+      signal: this.controller.signal,
+    });
   }
 
   /**
    * Removes all tracked event listeners
    */
   clearListeners(): void {
-    this.listeners.forEach(({ target, event, handler, options }) => {
-      target.removeEventListener(event, handler, options);
-    });
-    this.listeners = [];
+    this.controller.abort();
+    this.controller = new AbortController();
   }
 }
