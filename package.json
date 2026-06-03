@@ -9,11 +9,6 @@
       "import": "./dist/darkify.esm.js",
       "require": "./dist/darkify.umd.js"
     },
-    "./plugins": {
-      "types": "./dist/plugins/index.d.ts",
-      "import": "./dist/plugins/index.esm.js",
-      "require": "./dist/plugins/index.umd.js"
-    },
     "./package.json": "./package.json"
   },
   "files": [
