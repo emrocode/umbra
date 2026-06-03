@@ -1,5 +1,4 @@
 import { Darkify } from '@/core/darkify';
-import { jest } from '@jest/globals';
 
 describe('Darkify', () => {
   const setupMatchMedia = (isDark: boolean = false) => {
