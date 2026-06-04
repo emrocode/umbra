@@ -24,7 +24,7 @@ const options = {
 };
 
 // autoMatchTheme: boolean,
-// useColorScheme: default is ['#ffffff', '#000000'],
+// useColorScheme: ['#ffffff', '#000000'],
 // useStorage: 'local' | 'session' | 'none',
 // usePlugins: []
 
