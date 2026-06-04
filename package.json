@@ -18,7 +18,7 @@
     "_cls": "rm -rf dist",
     "_bundle": "rollup -c rollup.config.ts",
     "build": "npm run _cls && npm run _bundle",
-    "format": "prettier src/ \"*.{ts,js,json}\" --write",
+    "format": "prettier plugins/ src/ \"*.{ts,js,json}\" --write",
     "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --verbose",
     "demo": "npm run build && sh demo.sh",
     "prepublishOnly": "npm run build"
