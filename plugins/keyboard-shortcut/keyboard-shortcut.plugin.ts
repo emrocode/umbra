@@ -1,4 +1,4 @@
-import type { Plugin } from '@emrocode/umbra';
+import type { Plugin, Host } from '@emrocode/umbra';
 
 interface KeyboardShortcutOptions {
   key?: string;
@@ -10,11 +10,11 @@ interface KeyboardShortcutOptions {
 
 export class KeyboardShortcut implements Plugin {
   public static readonly pluginId = 'u-keyboard-shortcut';
-  private _host: any;
+  private _host: Host;
   private options: Required<KeyboardShortcutOptions>;
   private _lastTriggered: number = 0;
 
-  constructor(host: any, options?: KeyboardShortcutOptions) {
+  constructor(host: Host, options?: KeyboardShortcutOptions) {
     this._host = host;
     this.options = {
       key: options?.key ?? 'd',
