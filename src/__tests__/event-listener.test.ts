@@ -1,6 +1,6 @@
-import { EventListenerManager } from '@/core/eventListenerManager';
+import { EventListenerManager } from '@/core/event-listener';
 
-describe('EventListenerManager', () => {
+describe('eventListenerManager', () => {
   test('clears click listeners', () => {
     const _elm = new EventListenerManager();
     const button = document.createElement('button');

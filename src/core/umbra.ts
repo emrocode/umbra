@@ -1,7 +1,7 @@
-import { EventListenerManager } from '@/core/eventListenerManager';
-import { defaultOptions } from '@/core/defaultOptions';
+import { EventListenerManager } from '@/core/event-listener';
+import { defaultOptions } from '@/core/default';
 import { isBrowser, isTheme } from '@/utils';
-import type { Plugin, Options, Theme } from '@/types';
+import type { Options, Plugin, Theme } from '@/types';
 
 export class Umbra {
   private static readonly storageKey: string = 'theme';

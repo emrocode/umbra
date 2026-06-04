@@ -10,6 +10,6 @@ export default {
     ],
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<root-dir>/src/$1',
   },
 };

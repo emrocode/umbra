@@ -1,2 +1,2 @@
-export { isBrowser } from './isBrowser';
-export { isTheme } from './isTheme';
+export { isBrowser } from './is-browser';
+export { isTheme } from './is-theme';
