@@ -23,9 +23,9 @@ const options = {
   autoMatchTheme: true,
 };
 
-// autoMatchTheme: boolean,
+// autoMatchTheme: true,
 // useColorScheme: ['#ffffff', '#000000'],
-// useStorage: 'local' | 'session' | 'none',
+// useStorage: 'local',
 // usePlugins: []
 
 new Umbra('#element', options);
