@@ -1,4 +1,4 @@
-name: Run tests
+name: Run test suites
 
 on:
   push:
@@ -13,12 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
           node-version: 22
-      - name: Install dependencies
-        run: npm ci
-      - name: Run tests
-        run: npm test
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm test

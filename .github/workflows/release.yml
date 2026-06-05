@@ -10,20 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install deps and build
+        run: |
+          npm ci
+          npm run build
+
       - name: Create release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            New Release :tada:
-            - Rename Darkify to Umbra
-            - Package: `@emrocode/umbra`
-            - Install with `npm install @emrocode/umbra`
-            - Breaking change: update imports and package name.
+          name: Release ${{ github.ref_name }}
+          body_path: CHANGELOG.md
           draft: false
           prerelease: false
+          files: |
+            dist/**
