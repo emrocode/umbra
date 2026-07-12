@@ -49,14 +49,19 @@ export class Umbra {
 
     this.init(el); // always on top
     this.createAttribute();
-    this.syncThemeBetweenTabs();
+
+    if (this.options.useStorage !== 'none') {
+      this.syncThemeBetweenTabs();
+    }
   }
 
   private init(element?: string): void {
-    const q = window.matchMedia('(prefers-color-scheme: dark)');
-    this._elm.addListener(q, 'change', ({ matches: isDark }: MediaQueryListEvent) => {
-      this.applyTheme(isDark ? 'dark' : 'light');
-    });
+    if (this.options.autoMatchTheme) {
+      const q = window.matchMedia('(prefers-color-scheme: dark)');
+      this._elm.addListener(q, 'change', ({ matches: isDark }: MediaQueryListEvent) => {
+        this.applyTheme(isDark ? 'dark' : 'light');
+      });
+    }
 
     const setup = () => {
       this.initPlugins();
@@ -118,22 +123,15 @@ export class Umbra {
   }
 
   private createAttribute(): void {
-    const dataTheme = document.documentElement;
     const { useColorScheme } = this.options;
+    const dataTheme = document.documentElement;
+    const [lightColor, darkColor] = useColorScheme;
 
     const css = `/**! Umbra / A simple dark mode toggle library **/\n:root:where([data-theme="${this.theme}"]),[data-theme="${this.theme}"]{color-scheme:${this.theme}}`;
 
     dataTheme.dataset.theme = this.theme;
 
-    this.updateTags(css, useColorScheme);
-    this.persistTheme();
-  }
-
-  private updateTags(css: string, useColorScheme: Options['useColorScheme']) {
-    const [lightColor, darkColor] = useColorScheme;
-
     this._meta.name = 'theme-color';
-    this._meta.media = `(prefers-color-scheme: ${this.theme})`;
     this._meta.content = this.theme === 'light' ? lightColor : (darkColor ?? lightColor);
     this._style.innerHTML = css;
 
@@ -142,6 +140,8 @@ export class Umbra {
     // avoid tags duplication
     if (!this._meta.parentNode) head.appendChild(this._meta);
     if (!this._style.parentNode) head.appendChild(this._style);
+
+    this.persistTheme();
   }
 
   private persistTheme(): void {
@@ -165,6 +165,8 @@ export class Umbra {
   }
 
   private applyTheme(newTheme: Theme): void {
+    if (newTheme === this.theme) return;
+
     this.theme = newTheme;
     this.createAttribute();
     this.notifyPlugins(newTheme);
