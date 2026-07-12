@@ -1,6 +1,6 @@
 {
   "name": "@emrocode/umbra",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple dark mode toggle library",
   "type": "module",
   "exports": {
